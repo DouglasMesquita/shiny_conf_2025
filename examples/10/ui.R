@@ -19,7 +19,7 @@ ui <- add_cookie_handlers(
             label = "Duration (min)",
             min = 0,
             step = 1,
-            value = NULL
+            value = 60
           ),
           hidden(
             span(
@@ -36,7 +36,7 @@ ui <- add_cookie_handlers(
             label = "Weight (kg)",
             min = 0,
             step = 1,
-            value = NULL
+            value = 90
           ),
           hidden(
             span(
@@ -53,7 +53,7 @@ ui <- add_cookie_handlers(
             label = "Age",
             min = 18,
             step = 1,
-            value = NULL
+            value = 33
           ),
           hidden(
             span(
@@ -76,7 +76,7 @@ ui <- add_cookie_handlers(
             inputId = "gender",
             label = "Gender",
             choices = c("", "Male", "Female"),
-            selected = ""
+            selected = "Male"
           ),
           hidden(
             span(
@@ -101,7 +101,7 @@ ui <- add_cookie_handlers(
               "Volleyball",
               "Walking"
             ),
-            selected = ""
+            selected = "Tennis"
           ),
           hidden(
             span(
