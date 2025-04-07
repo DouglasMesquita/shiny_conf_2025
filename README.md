@@ -5,7 +5,7 @@ Thanks for checking out the materials for my talk **"Why Is It Triggering Twice?
 
 This repository contains:
 - 🖥️ The code and examples used in the talk  
-- 📄 The slides in PDF format (`presentation.pdf`)
+- 📄 The slides in PDF format (`shiny_conf_2025.pdf`)
 
 ## Getting Started
 
