@@ -1,0 +1,43 @@
+# RStudio files
+.Rhistory
+.Rapp.history
+.RData
+.Rproj.user/
+
+# RStudio project files
+.Rproj
+
+# R package build files
+*.tar.gz
+*.Rcheck/
+inst/doc/
+
+# Generated files
+*.Rout
+*.Rout.save
+
+# R Markdown output files
+*.html
+*.pdf
+*.docx
+*.epub
+
+# Shiny app-specific files
+shiny-server.log
+*.sqlite
+
+# renv files
+renv.lock
+renv/
+
+# .RData and .Rhistory files
+.RData
+.Rhistory
+
+# RStudio temporary files
+*.Rproj.user/
+
+# Miscellaneous files
+*.swp
+*.swo
+

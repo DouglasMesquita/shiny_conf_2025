@@ -1,0 +1,34 @@
+.custom-well-panel {
+ margin-top: 20px;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ border: none
+}
+
+.custom-action-button,
+.custom-action-button:hover,
+.custom-action-button:active,
+.custom-action-button:focus,
+.custom-action-button.active.focus,
+.custom-action-button.active:focus,
+.custom-action-button.active:hover,
+.custom-action-button:active.focus,
+.custom-action-button:active:focus,
+.custom-action-button:active:hover {
+  height: 70px;
+  color: #ffffff;
+  background-color: #647ccd;
+  border-color: #647ccd;
+}
+
+.output-text {
+  font-size: 30px;
+}
+
+.form-group {
+  margin-bottom: 0px;
+}
+
+.cannot-be-empty {
+  color: red;
+  font-size: 10px;
+}
