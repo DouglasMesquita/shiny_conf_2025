@@ -25,10 +25,6 @@ inst/doc/
 shiny-server.log
 *.sqlite
 
-# renv files
-renv.lock
-renv/
-
 # .RData and .Rhistory files
 .RData
 .Rhistory
@@ -39,4 +35,3 @@ renv/
 # Miscellaneous files
 *.swp
 *.swo
-
