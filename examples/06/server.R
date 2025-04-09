@@ -30,14 +30,13 @@ server <- function(input, output, session) {
       message("--- Reading from cookies")
 
       # collect values from cookies
-      if (remove_cookies) { remove_cookies(input_names, session); stop() }
+      if (remove_cookies) { remove_cookies(input_names, session); stopApp() }
       selected_values <- get_cookies(input_names)
 
       # update widgets
       update_widgets(selected_values, session)
     },
-    once = TRUE
-    # once = FALSE
+    once = TRUE # once = FALSE
   )
 
   # collecting age category. e.g: [18-30)

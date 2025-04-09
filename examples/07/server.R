@@ -7,6 +7,7 @@
 # We added a button to control reactivity, but this behavior was not requested by the client.
 # If the user deletes information from the input widgets and presses "Calculate",
 # errors appear in the console and no messages are shown on the screen.
+# if we do not use isolate, application will trigger even if the button was not clicked
 #
 # If `remove_cookies` is set to TRUE, the app will intentionally crash and
 # all cookies will be cleared. Run once with TRUE to test the behavior,
@@ -26,7 +27,7 @@ server <- function(input, output, session) {
       message("--- Reading from cookies")
 
       # collect values from cookies
-      if (remove_cookies) { remove_cookies(input_names, session); stop() }
+      if (remove_cookies) { remove_cookies(input_names, session); stopApp() }
       selected_values <- get_cookies(input_names)
 
       # update widgets
@@ -101,51 +102,53 @@ server <- function(input, output, session) {
   })
 
   # output message
-  output$message <- renderUI({
+  observeEvent(input$calculate_calories, {
     # adding dependency on the actionButton
     # returning NULL in case the button was never clicked
     if (input$calculate_calories == 0) return(NULL)
 
-    # start time
-    start <- Sys.time()
-    message(glue(">>> Creating the output message <<<"))
+    output$message <- renderUI({
+      # start time
+      start <- Sys.time()
+      message(glue(">>> Creating the output message <<<"))
 
-    # cookies: save selection
-    isolate(
-      save_cookies(input_names, input)
-    )
+      # cookies: save selection
+      isolate(
+        save_cookies(input_names, input)
+      )
 
-    # collect metric and inputs
-    duration <- isolate(input$duration)
-    weight <- isolate(input$weight)
-    age <- isolate(input$age)
-    gender <- isolate(input$gender)
-    activity <- isolate(input$activity)
+      # collect metric and inputs
+      duration <- isolate(input$duration)
+      weight <- isolate(input$weight)
+      age <- isolate(input$age)
+      gender <- isolate(input$gender)
+      activity <- isolate(input$activity)
 
-    # compute metric
-    calories <- isolate(calories_reac())
+      # compute metric
+      calories <- isolate(calories_reac())
 
-    # >>> uncomment this chunk
-    # duration <- input$duration
-    # weight <- input$weight
-    # age <- input$age
-    # gender <- input$gender
-    # activity <- input$activity
+      # # >>> uncomment this chunk
+      # duration <- input$duration
+      # weight <- input$weight
+      # age <- input$age
+      # gender <- input$gender
+      # activity <- input$activity
+      #
+      # calories <- calories_reac()
+      # # <<< uncomment this chunk
 
-    # calories <- calories_reac()
-    # <<< uncomment this chunk
+      # Calculate the time spent
+      total_time <- Sys.time() - start
+      message(glue(">>> Creating the output message took {round(total_time, 2)} seconds <<<"))
 
-    # Calculate the time spent
-    total_time <- Sys.time() - start
-    message(glue(">>> Creating the output message took {round(total_time, 2)} seconds <<<"))
-
-    # output message
-    span(
-      glue(
-        "For a {gender} aged {age}, doing {activity} for {duration} minutes
+      # output message
+      span(
+        glue(
+          "For a {gender} aged {age}, doing {activity} for {duration} minutes
             at a weight of {weight} kg, the estimated calorie burn is {calories} kcal."
-      ),
-      class = "output-text"
-    )
+        ),
+        class = "output-text"
+      )
+    })
   })
 }

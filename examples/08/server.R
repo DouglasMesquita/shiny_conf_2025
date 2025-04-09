@@ -1,7 +1,7 @@
 # What to test?
 #
 # Eighth scenario: using `req()` to avoid unnecessary calculations
-# - Set valid_inputs <- validate_inputs(input_names, input) to show that
+# - Set valid_inputs <- validate_inputs(input_names, input) to show that (remove)
 #   functions can be affected by the reactivity
 # - Remove some `req()` statements and observe what happens
 # - Change the age category and reload the app - this part of the code
@@ -30,7 +30,7 @@ server <- function(input, output, session) {
       message("--- Reading from cookies")
 
       # collect values from cookies
-      if (remove_cookies) { remove_cookies(input_names, session); stop() }
+      if (remove_cookies) { remove_cookies(input_names, session); stopApp() }
       selected_values <- get_cookies(input_names)
 
       # update widgets
@@ -134,58 +134,64 @@ server <- function(input, output, session) {
   })
 
   # output message
-  output$message <- renderUI({
-    req(input$calculate_calories)
+  observeEvent(input$calculate_calories, {
+    # adding dependency on the actionButton
+    # returning NULL in case the button was never clicked
+    if (input$calculate_calories == 0) return(NULL)
 
-    # start time
-    start <- Sys.time()
-    message(glue(">>> Creating the output message <<<"))
+    output$message <- renderUI({
+      req(input$calculate_calories)
 
-    # cookies: save selection
-    isolate(
-      save_cookies(input_names, input)
-    )
+      # start time
+      start <- Sys.time()
+      message(glue(">>> Creating the output message <<<"))
 
-    # collect metric and inputs
-    duration <- isolate(input$duration)
-    weight <- isolate(input$weight)
-    age <- isolate(input$age)
-    gender <- isolate(input$gender)
-    activity <- isolate(input$activity)
-
-    # return error message in case any of the inputs are not set
-    # TAKE CARE!
-    # if you are evaluating inputs inside a function, it turns the function into
-    # a reactive context!!!
-    # valid_inputs <- validate_inputs(input_names, input) # UNCOMMENT HERE!
-    valid_inputs <- isolate(
-      validate_inputs(input_names, input)
-    )
-
-    if (!valid_inputs) {
-      message(glue(">>> Invalid inputs <<<"))
-      return(
-        span(
-          "Please provide a valid set of parameters",
-          class = "output-text"
-        )
+      # cookies: save selection
+      isolate(
+        save_cookies(input_names, input)
       )
-    }
 
-    # compute metric
-    calories <- isolate(calories_reac())
+      # collect metric and inputs
+      duration <- isolate(input$duration)
+      weight <- isolate(input$weight)
+      age <- isolate(input$age)
+      gender <- isolate(input$gender)
+      activity <- isolate(input$activity)
 
-    # Calculate the time spent
-    total_time <- Sys.time() - start
-    message(glue(">>> Creating the output message took {round(total_time, 2)} seconds <<<"))
+      # return error message in case any of the inputs are not set
+      # TAKE CARE!
+      # if you are evaluating inputs inside a function, it turns the function into
+      # a reactive context!!!
+      # valid_inputs <- validate_inputs(input_names, input) # UNCOMMENT HERE!
+      valid_inputs <- isolate(
+        validate_inputs(input_names, input)
+      )
 
-    # output message
-    span(
-      glue(
-        "For a {gender} aged {age}, doing {activity} for {duration} minutes
+      if (!valid_inputs) {
+        message(glue(">>> Invalid inputs <<<"))
+        return(
+          span(
+            "Please provide a valid set of parameters",
+            class = "output-text"
+          )
+        )
+      }
+
+      # compute metric
+      calories <- isolate(calories_reac())
+
+      # Calculate the time spent
+      total_time <- Sys.time() - start
+      message(glue(">>> Creating the output message took {round(total_time, 2)} seconds <<<"))
+
+      # output message
+      span(
+        glue(
+          "For a {gender} aged {age}, doing {activity} for {duration} minutes
             at a weight of {weight} kg, the estimated calorie burn is {calories} kcal."
-      ),
-      class = "output-text"
-    )
+        ),
+        class = "output-text"
+      )
+    })
   })
 }

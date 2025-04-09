@@ -17,7 +17,7 @@ server <- function(input, output, session) {
       message("--- Reading from cookies")
 
       # collect values from cookies
-      if (remove_cookies) { remove_cookies(input_names, session); stop() }
+      if (remove_cookies) { remove_cookies(input_names, session); stopApp() }
       selected_values <- get_cookies(input_names)
 
       # update widgets
@@ -141,7 +141,9 @@ server <- function(input, output, session) {
 
     # return error message in case any of the inputs are not set
     # it will also avoid calories calculation
-    valid_inputs <- validate_inputs(input_names, input)
+    valid_inputs <- isolate(
+      validate_inputs(input_names, input)
+    )
 
     if (!valid_inputs) {
       message(glue(">>> Invalid inputs <<<"))
@@ -159,7 +161,9 @@ server <- function(input, output, session) {
     message(glue(">>> Creating the output message <<<"))
 
     # cookies: save selection
-    save_cookies(input_names, input)
+    isolate(
+      save_cookies(input_names, input)
+    )
 
     # compute metric
     calories <- calories_reac()

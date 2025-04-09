@@ -6,7 +6,7 @@
 #
 # Why is this a problem?
 # The reactive still triggers downstream computations, even though it's returning
-# the exact same value — which leads to unnecessary updates.
+# the exact same value - which leads to unnecessary updates.
 server <- function(input, output, session) {
   # collecting age category. e.g: [18-30)
   age_category <- reactive({
